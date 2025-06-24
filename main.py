@@ -1,34 +1,37 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel # function hota h class create krne k liye (basemdel)
 
-app = FastAPI()
 
-# ✅ Tea model
-class Tea(BaseModel):
-    id: int
-    name: str
-    flavor: str
+app=FastAPI()
+data=[]
 
-# ✅ In-memory list of teas
-teas = [
-    Tea(id=1, name="Green Tea", flavor="Mint"),
-    Tea(id=2, name="Black Tea", flavor="Lemon"),
-]
+class Book (BaseModel):
+    id:int
+    Title:str
+    author:str
+    publisher:str
 
-# ✅ PUT: Update a tea by ID
-@app.put("/teas/{tea_id}")
-def update_tea(tea_id: int, updated_tea: Tea):
-    for index, tea in enumerate(teas):
-        if tea.id == tea_id:
-            teas[index] = updated_tea
-            return updated_tea
-    return {"error": "Tea not found"}
+# @app.post("/book")
+# def add_book(Book:book):
+#     data.append(book.dict())
+#     return data 
 
-# ✅ DELETE: Delete a tea by ID
-@app.delete("/teas/{tea_id}")
-def delete_tea(tea_id: int):
-    for index, tea in enumerate(teas):
-        if tea.id == tea_id:
-            deleted_tea = teas.pop(index)
-            return deleted_tea
-    return {"error": "Tea not found"}
+@app.post("/book")
+def add_book(book:Book): 
+    data.append(book.dict())
+    return data
+
+
+@app.get("/lists")
+def get_book():
+ return data 
+
+@app.put("/book/{id}")
+def add_book (id:int,book:Book):
+   data[id-1]=book
+   return data
+
+@app.delete("/book/{id}")
+def delete_book(id:int):
+   data.pop(id-1)
+   return data
